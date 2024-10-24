@@ -1,0 +1,81 @@
+<h1 class="display-2">Cadastro de alunos</h1>
+
+<hr>
+
+<form [formGroup]="formulario">
+
+    <!-- Nome do aluno -->
+    @if (formulario.get("nome").hasError('required') && formulario.get('nome').touched) {
+        <p class="alert alert-warning">Digite o nome do Aluno</p>
+    }
+
+    @if (formulario.get('nome').hasError('minlength') && formulario.get('nome').touched) {
+        <p class="alert alert-warning">O campo 'Aluno' precisa conter pelo menos 3 caracteres</p>
+    }
+    <input type="text" formControlName="nome" placeholder="Aluno" class="form-control">
+
+    <!-- Primeira nota -->
+    @if (formulario.get('nota1').hasError('required') && formulario.get('nota1').touched) {
+        <p class="alert alert-warning">Informe a primeira nota</p>
+    }
+    @if (formulario.get('nota1').hasError('min') && formulario.get('nota1').touched) {
+        <p class="alert alert-warning">A nota não pode ser negativa</p>
+    }
+    @if (formulario.get('nota1').hasError('max') && formulario.get('nota1').touched) {
+        <p class="alert alert-warning">A nota não pode ser maior que 10</p>
+    }
+    <input type="number" formControlName="nota1" placeholder="Nota 1" class="form-control">
+
+    <!-- Segunda nota -->
+    @if (formulario.get('nota2').hasError('required') && formulario.get('nota2').touched) {
+        <p class="alert alert-warning">Informe a segunda nota</p>
+    }
+    @if (formulario.get('nota2').hasError('min') && formulario.get('nota2').touched) {
+        <p class="alert alert-warning">A nota não pode ser negativa</p>
+    }
+    @if (formulario.get('nota2').hasError('max') && formulario.get('nota2').touched) {
+        <p class="alert alert-warning">A nota não pode ser maior que 10</p>
+    }
+    <input type="number" formControlName="nota2" placeholder="Nota 2" class="form-control">
+
+    @if (btnCadastrar) {
+        <input type="button" value="Cadastrar" [disabled]=formulario.invalid class="btn btn-primary" (click)="cadastrar()">
+    }@else {
+        <input type="button" value="Alterar"   class="btn btn-primary" (click)="alterar()">
+        <input type="button" value="Remover"   class="btn btn-primary" (click)="remover()">
+        <input type="button" value="Cancelar"  class="btn btn-primary" (click)="cancelar()">
+    }
+
+</form>
+
+<table class="table table-strippet">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Aluno</th>
+            <th>Nota 1</th>
+            <th>Nota 2</th>
+            <th>Média</th>
+            <th>Status</th>
+            <th>Selecionar</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let v of vetor; index as indice">
+            <td>{{indice + 1}}</td>
+            <td>{{v.nome}}</td>
+            <td>{{v.nota1}}</td>
+            <td>{{v.nota2}}</td>
+            <td>{{v | media}}</td>
+            @if ((v | media) >= 7) {
+                <td style="color: green;">Aprovado</td>
+            }@else if ((v | media) >= 5) {
+                <td style="color: rgb(180, 180, 75);">Em exame</td>
+            }@else {
+                <td style="color: red;">Reprovado</td>
+            }
+            <td><button class="btn btn-primary" (click)="selecionar(indice)">Selecionar</button></td>
+        </tr>
+    </tbody>
+</table>
